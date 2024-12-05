@@ -20,22 +20,23 @@ class InitialLayout:
     self.button_fg    = "white"
     self.bg           = "#4B3C31"
     self.bg2          = "#D3D3D3"
-    self.win_width      = self.root.winfo_width()
-    self.win_height     = self.root.winfo_height()
+    self.win_width    = self.root.winfo_width()
+    self.win_height   = self.root.winfo_height()
 
-    RequestBox(self.root,width=int(self.win_width), height=0)
+    RequestBox(self.root)
 
+    button_rel = 69 
     # clear button for the RequestBox
     SendButton(
     self.root, "Clear",
     self.button_bg, "white",
-    x=280, y=709, width=10, height=0)
+    x=(280 - button_rel), y=709, width=10, height=0)
 
     # paste button for the RequestBox
     SendButton(
     self.root, "Paste",
     self.button_bg, "white",
-    x=400, y=709, width=10, height=0)
+    x=(400 - button_rel), y=709, width=10, height=0)
     UrlEntry(self.root, width=30)
 
   def option_selected(self, value):
