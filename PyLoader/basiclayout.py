@@ -2,7 +2,6 @@ import tkinter                  as tk
 from tkinter                    import messagebox
 from PyLoader.sendButton        import SendButton
 from PyLoader.requestBox        import RequestBox
-from PyLoader.topMenu           import TopDefaultMenu
 from PyLoader.rightFrameInput   import RightFrameInput 
 
 class InitialLayout:
@@ -29,7 +28,6 @@ class InitialLayout:
 
     RequestBox(self.root)
     RightFrameInput(self.root)
-    TopDefaultMenu(self.root)
 
     # clear button for the RequestBox
     SendButton(

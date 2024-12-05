@@ -10,6 +10,8 @@ def main():
     root = tk.Tk()
     root.title("PyLoader")
     root.geometry("500x500")
+    root.rowconfigure(0, weight=1)  
+    root.columnconfigure(0, weight=1)  
 
     PyLoader(root)
     root.mainloop()

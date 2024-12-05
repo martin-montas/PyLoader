@@ -1,4 +1,4 @@
-from PyLoader.basiclayout   import InitialLayout
+from PyLoader.topMenu       import TopDefaultMenu
 
 class PyLoader:
     '''
@@ -9,7 +9,10 @@ class PyLoader:
         self.bg             =   "lightgrey"
         self.fg             =   "black"
 
-        InitialLayout(self.root)
+
+
+
+        TopDefaultMenu(root)
         self.root.config(bg=self.bg)
 
 
