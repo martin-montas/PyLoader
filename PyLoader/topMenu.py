@@ -31,8 +31,8 @@ class TopDefaultMenu:
         repeater.pack(fill="both", expand=True)
         intruder.pack(fill="both", expand=True)
 
-        self.tabs.add(repeater, text="Intruder")
-        self.tabs.add(intruder, text="Repeater")
+        self.tabs.add(repeater, text="Repeater")
+        self.tabs.add(intruder, text="Intruder")
 
         InitialLayout(repeater)
 
