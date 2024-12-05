@@ -4,17 +4,14 @@ from tkinter import messagebox
 class TopDefaultMenu:
   '''
   '''
-  def __init__(self, root, bg_color, fg_color):
+  def __init__(self, root, bg, fg):
     self.root       = root
-    self.fg       = bg_color
-    self.bg       = fg_color
+    self.fg       = fg
+    self.bg       = bg
     self.menu_bar   = tk.Menu(self.root, bg=self.bg, fg=self.fg)
     self.file_menu  = tk.Menu(self.menu_bar, tearoff=0)
     self.edit_menu  = tk.Menu(self.menu_bar, tearoff=0)
 
-  def init(self):
-    '''
-    '''
     self.file_menu.add_command(label="New", command=self.new_file)
     self.file_menu.add_command(label="Open", command=self.open_file)
     self.file_menu.add_command(label="Save", command=self.save_file)
