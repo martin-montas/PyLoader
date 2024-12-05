@@ -1,4 +1,4 @@
-from PyLoader.basiclayout   import InitialLayout
+from PyLoader.initialLayout   import InitialLayout
 import tkinter as tk
 from tkinter import ttk
 
@@ -35,7 +35,3 @@ class TopDefaultMenu:
         self.tabs.add(intruder, text="Intruder")
 
         InitialLayout(repeater)
-
-
-
-
