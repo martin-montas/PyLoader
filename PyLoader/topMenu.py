@@ -1,50 +1,46 @@
 import tkinter as tk
-from tkinter import messagebox
+#from tkinter import messagebox
 
 class TopDefaultMenu:
   '''
   '''
-  def __init__(self, root, bg, fg):
-    self.root       = root
-    self.fg       = fg
-    self.bg       = bg
-    self.menu_bar   = tk.Menu(self.root, bg=self.bg, fg=self.fg)
-    self.file_menu  = tk.Menu(self.menu_bar, tearoff=0)
-    self.edit_menu  = tk.Menu(self.menu_bar, tearoff=0)
+  def __init__(self, root, bg=None, fg=None):
+    self.root           = root
+    self.bg             = "lightgrey"
+    self.fg             = "black"
+    self.button_width   = 10
+    self.button_height  = 0
+    menu_frame          = tk.Frame(self.root, bg=self.bg)
+    self.result_frame   = tk.Frame(self.root, bg=self.bg)
+    self.result_label   = tk.Label(self.result_frame, font=("Arial", 16), 
+    bg=self.bg, fg=self.fg)
+    self.result_frame.pack(pady=30)
+    self.result_label.pack()
 
-    self.file_menu.add_command(label="New", command=self.new_file)
-    self.file_menu.add_command(label="Open", command=self.open_file)
-    self.file_menu.add_command(label="Save", command=self.save_file)
-    self.file_menu.add_separator()  # Adds a separator line
-    self.file_menu.add_command(label="Exit", command=self.exit_app)
-    self.menu_bar.add_cascade(label="File", menu=self.file_menu)
-    self.edit_menu.add_command(label="Undo")
-    self.edit_menu.add_command(label="Redo")
-    self.edit_menu.add_separator()  
-    self.edit_menu.add_command(label="Cut")
-    self.edit_menu.add_command(label="Copy")
-    self.edit_menu.add_command(label="Paste")
-    self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
-    self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
-    self.help_menu.add_command(label="About", command=lambda: messagebox.showinfo("About", "This is a simple menu example"))
-    self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
+    # Create a frame for the horizontal menu (buttons)
+    menu_frame.pack(side=tk.TOP, fill=tk.X)
+    
+    # Define the menu buttons
+    menu_options = ["Seeker", "shooter", "Blah", "Nothing"]
+    for option in menu_options:
+        button = tk.Button(menu_frame, text=option, font=("Arial", 16), 
+        command=lambda opt=option: self.show_content(opt),
+        bg=self.bg, fg=self.fg,
+        width=self.button_width, height=self.button_height
+        )
+        button.pack(side=tk.LEFT, padx=10)
 
-  def new_file(self):
-      '''
-      '''
-      messagebox.showinfo("New File", "Create a new file")
+  def show_content(self,option):
 
-  def open_file(self):
-      '''
-      '''
-      messagebox.showinfo("Open File", "Open an existing file")
+    self.result_label.config(text="")
+    if option == "Option 1":
+        # TODO: called the classes here
+        # make sure you pass the proper elements to it
+        self.result_label.config(text="You selected Option 1: Information about Option 1.")
+    elif option == "Option 2":
+        self.result_label.config(text="You selected Option 2: Information about Option 2.")
+    elif option == "Option 3":
+        self.result_label.config(text="You selected Option 3: Information about Option 3.")
+    elif option == "Option 4":
+        self.result_label.config(text="You selected Option 4: Information about Option 4.")
 
-  def save_file(self):
-      '''
-      '''
-      messagebox.showinfo("Save File", "Save the current file")
-
-  def exit_app(self):
-      '''
-      '''
-      self.root.quit()
