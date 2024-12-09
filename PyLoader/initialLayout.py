@@ -2,6 +2,7 @@ import tkinter                  as tk
 from tkinter                    import messagebox
 from PyLoader.sendButton        import SendButton
 from PyLoader.requestBox        import RequestBox
+from PyLoader.responseBox       import ResponseBox
 from PyLoader.rightFrameInput   import RightFrameInput 
 
 class InitialLayout:
@@ -16,7 +17,7 @@ class InitialLayout:
     self.x              = 140
     self.y              = 100
     self.left_pad       = 20
-    self.footer_version = "PyLoader v0.1"
+    self.footer_version = "PyLoader v0.0.1"
     self.fg             = "black"
     self.button_bg      = "#f58216"
     self.button_fg      = "white"
@@ -24,27 +25,15 @@ class InitialLayout:
     self.bg2            = "#D3D3D3"
     self.win_width      = self.root.winfo_width()
     self.win_height     = self.root.winfo_height()
-    self.button_rel     = 69 
+    self.button_rel     = 69
 
     RequestBox(self.root)
+    ResponseBox(self.root)
     RightFrameInput(self.root)
-
-    # clear button for the RequestBox
-    SendButton(
-    self.root, "Clear",
-    self.button_bg, "white",
-    x=(280 - self.button_rel), y=709, width=10, height=0)
-
-    # paste button for the RequestBox
-    SendButton(
-    self.root, "Paste",
-    self.button_bg, "white",
-    x=(400 - self.button_rel), y=709, width=10, height=0)
 
     footer = tk.Label(self.root, text=self.footer_version,
     bg=self.bg, fg=self.fg)
     footer.pack(side="bottom")
-
 
   def option_selected(self, value):
      messagebox.showinfo("Selected Option", value)
