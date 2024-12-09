@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.firefox.options import Options
 
+
 class CustomProxy:
     def __init__(self, url):
         # Initialize Proxy and Options
