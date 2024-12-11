@@ -22,7 +22,7 @@ class ResponseBox:
         outer_frame.place(x=self.x, y=140)
 
         label = tk.Label(self.root, text="Response", bg="lightgrey", fg="black")
-        label.place(x=self.x + 75, y=135, anchor="ne")
+        label.place(x=self.x + 75, y=135)
 
         spacer_frame = tk.Frame(
             outer_frame,
@@ -31,8 +31,8 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
+        spacer_frame.pack(fill="both", expand=True)  # Pack after defining the frame
 
-        spacer_frame.pack(fill="both", expand=True)
         self.text_space = tk.Text(
             spacer_frame,
             width=self.width,
@@ -42,42 +42,18 @@ class ResponseBox:
             relief="flat",
             wrap="word",
         )
-
-        self.text_space.pack(fill="both", expand=True)
-
-        tk.Label(self.root, bg="lightgrey", fg="black", text="Send").place(
-            bordermode="outside", relx=0.5, anchor="center", y=350
-        )
+        self.text_space.pack(
+            fill="both", expand=True
+        )  # Pack the Text widget inside spacer_frame
 
         tk.Button(
             self.root,
-            text=">>",
+            text="Send",
             fg="black",
-            bd=3,
-            width=10,
-            height=0,
-            relief="raised",
+            relief="groove",
             command=self.response_button_command,
-        ).place(bordermode="outside", relx=0.5, anchor="center", y=400)
-
-        # SendButton(
-        # self.root, "Clear",
-        # self.button_bg, "white",
-        # x=(280 - self.button_rel), y=709, width=10, height=0)
-
-        # # paste button for the RequestBox
-        # SendButton(
-        # self.root, "Paste",
-        # self.button_bg, "white",
-        # x=(400 - self.button_rel), y=709, width=10, height=0)
-
-        tk.Button(self.root, text="Clear", bg=self.button_bg, fg="black").place(
-            relx=0.5, y=710
-        )
-
-        tk.Button(self.root, text="Paste", bg=self.button_bg, fg="black").place(
-            relx=0.5, y=740
-        )
+        ).place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
     def response_button_command(self):
         pass
+
