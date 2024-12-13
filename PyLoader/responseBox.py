@@ -1,6 +1,4 @@
 import tkinter as tk
-import socketserver
-from PyLoader.proxyComponent import ProxyHandler
 
 class ResponseBox:
     """ """
@@ -54,10 +52,6 @@ class ResponseBox:
             command=self.response_button_command,
         ).place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
-    def run_server(self, proxy_ip="127.0.0.1", proxy_port=8080):
-        with socketserver.TCPServer((proxy_ip, proxy_port), ProxyHandler) as httpd:
-            print(f"Serving proxy at {proxy_ip}:{proxy_port}")
-            httpd.serve_forever()
 
     def response_button_command(self):
         pass

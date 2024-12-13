@@ -1,6 +1,7 @@
 from tkinter import ttk
 from PyLoader.topMenu import TopDefaultMenu
 from PyLoader.initialLayout import InitialLayout
+from PyLoader.settingsLayout import SettingsLayout
 
 
 class PyLoader:
@@ -26,11 +27,17 @@ class PyLoader:
         intruder.pack(fill="both", expand=True)
         settings.pack(fill="both", expand=True)
 
+        self.tabs.add(settings, text="Settings")
         self.tabs.add(repeater, text="Repeater")
         self.tabs.add(intruder, text="Intruder")
-        self.tabs.add(settings, text="Settings")
 
+        # the repeater tab
         InitialLayout(repeater)
+
+        # the settings tab
+        SettingsLayout(settings)
+
+        # the top tab
         TopDefaultMenu(root)
 
         self.root.config(bg=self.bg)
