@@ -16,15 +16,19 @@ class PyLoader:
 
         repeater = ttk.Frame(self.tabs, width=500, height=500)
         intruder = ttk.Frame(self.tabs, width=500, height=500)
+        settings = ttk.Frame(self.tabs, width=500, height=500)
 
         repeater.columnconfigure(0, weight=1)
         intruder.columnconfigure(0, weight=1)
+        settings.columnconfigure(0, weight=1)
 
         repeater.pack(fill="both", expand=True)
         intruder.pack(fill="both", expand=True)
+        settings.pack(fill="both", expand=True)
 
         self.tabs.add(repeater, text="Repeater")
         self.tabs.add(intruder, text="Intruder")
+        self.tabs.add(settings, text="Settings")
 
         InitialLayout(repeater)
         TopDefaultMenu(root)

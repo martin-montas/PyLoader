@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from PyLoader.pyLoader import PyLoader
+from PyLoader.proxyComponent import ProxyHandler
 
 
 def main():
@@ -13,7 +14,6 @@ def main():
 
     PyLoader(root)
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()

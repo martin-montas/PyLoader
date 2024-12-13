@@ -29,7 +29,10 @@ class InitialLayout:
         self.button_rel = 69
 
         RequestBox(self.root)
-        ResponseBox(self.root)
+        response_box = ResponseBox(self.root)
+
+        # Don't hardcode these: proxy_ip proxy_port
+        response_box.run_server(proxy_ip="127.0.0.1", proxy_port=8080)
         RightFrameInput(self.root)
 
         footer = tk.Label(self.root, text=self.footer_version, bg=self.bg, fg=self.fg)

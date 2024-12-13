@@ -7,7 +7,7 @@ class RequestBox:
 
     def __init__(self, root, bg=None, x=30, y=150, width=75, height=25):
         self.root = root
-        # self.bg             = "lightgrey"
+        # self.bg = "lightgrey"
         self.x = x
         self.y = y
         self.width = width
@@ -44,28 +44,41 @@ class RequestBox:
         self.text_space.pack(fill="both", expand=True)
 
         # clear button for the RequestBox
-        SendButton(
+        tk.Button(
             self.root,
-            "Clear",
-            self.button_bg,
-            "white",
+            text="clear",
+            bg=self.button_bg,
+            fg=self.fg,
+            bd=3,
+            width=10,
+            height=0,
+            relief="raised",
+            command=self.clear_command,
+        ).place(
+            bordermode="outside",
             x=(280 - self.button_rel),
             y=709,
+        )
+        # Clear button for the RequestBox
+        tk.Button(
+            self.root,
+            text="Paste",
+            bg=self.button_bg,
+            fg=self.fg,
+            bd=3,
             width=10,
             height=0,
-        )
-
-        # paste button for the RequestBox
-        SendButton(
-            self.root,
-            "Paste",
-            self.button_bg,
-            "white",
+            relief="raised",
+            command=self.paste_command,
+        ).place(
+            bordermode="outside",
             x=(400 - self.button_rel),
             y=709,
-            width=10,
-            height=0,
         )
 
-    def command(self):
+    def paste_command(self):
+        '''
+        '''
+        pass
+    def clear_command(self):
         pass
