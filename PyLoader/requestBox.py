@@ -77,8 +77,8 @@ class RequestBox:
         )
 
     def paste_command(self):
-        '''
-        '''
+        """ """
         pass
+
     def clear_command(self):
         pass

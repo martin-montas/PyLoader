@@ -3,6 +3,8 @@ import http.server
 import socketserver
 import urllib.request
 
+# Store the server instance globally or pass it where needed
+httpd_instance = None
 
 class ProxyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -22,10 +24,10 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         target_url = self.path
         print(f"Forwarding POST request to: {target_url}")
         try:
-            content_length = int(self.headers.get('Content-Length', 0))
+            content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length)
 
-            req = urllib.request.Request(target_url, data=body, method='POST')
+            req = urllib.request.Request(target_url, data=body, method="POST")
             for key in self.headers:
                 req.add_header(key, self.headers[key])
 
@@ -40,23 +42,48 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
 
 
 def run_proxy_server(proxy_ip="127.0.0.1", proxy_port=8080):
-    # A function to start the proxy server
+    global httpd_instance
+    # Create the proxy server
     with socketserver.TCPServer((proxy_ip, proxy_port), ProxyHandler) as httpd:
+        httpd_instance = httpd
         print(f"Serving proxy at {proxy_ip}:{proxy_port}")
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except Exception as e:
+            print(f"Server stopped: {e}")
+        finally:
+            httpd_instance = None
+
+def stop_proxy_server():
+    global httpd_instance
+    if httpd_instance:
+        print("Stopping the proxy server...")
+        httpd_instance.shutdown()
+        httpd_instance = None
+    else:
+        print("Proxy server is not running.")
 
 
 class SettingsLayout:
     def __init__(self, root) -> None:
         self.root = root
+        tk.Label(self.root,text="Proxy IP").grid(row=0,column=0,
+        padx=10, pady=10)
         self.proxy_ip_entry = tk.Entry(self.root)
-        self.proxy_ip_entry.grid(row=0, column=0, padx=10, pady=10)
+        self.proxy_ip_entry.grid(row=1, column=0, padx=10, pady=10)
 
+        tk.Label(self.root,text="Proxy port").grid(row=2,column=0,
+        padx=10, pady=10)
         self.proxy_port_entry = tk.Entry(self.root)
-        self.proxy_port_entry.grid(row=1, column=0, padx=10, pady=10)
+        self.proxy_port_entry.grid(row=3, column=0, padx=10, pady=10)
 
-        proxy_button = tk.Button(self.root, text="Set Proxy", bg="orange", command=self.button_command)
-        proxy_button.grid(row=2, column=0, padx=10, pady=10)
+        tk.Button(
+            self.root, text="Set Proxy", bg="orange", command=self.button_command
+        ).grid(row=4, column=0, padx=10, pady=10)
+
+        tk.Button(
+            self.root, text="Disable Proxy", bg="orange",
+            command=stop_proxy_server,).grid(row=5, column=0, padx=10, pady=10)
 
     def button_command(self):
         ip = self.proxy_ip_entry.get()
@@ -68,5 +95,3 @@ class SettingsLayout:
             run_proxy_server(ip, port)
         except ValueError:
             print("Invalid port number. Please enter a valid integer.")
-
-

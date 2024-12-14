@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class ResponseBox:
     """ """
 
@@ -51,7 +52,6 @@ class ResponseBox:
             relief="groove",
             command=self.response_button_command,
         ).place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
-
 
     def response_button_command(self):
         pass
