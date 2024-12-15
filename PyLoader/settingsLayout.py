@@ -6,7 +6,6 @@ import threading
 
 # Global stop event to signal the server thread
 stop_event = threading.Event()
-
 httpd_instance = None
 
 class ProxyHandler(http.server.BaseHTTPRequestHandler):
@@ -18,8 +17,6 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                 self.send_response(response.status)
 
                 for key, value in response.getheaders():
-    # TODO(martin-montas) Take this get headers functio
-    # and display it in the Text area of the repeaters
                     self.send_header(key, value)
                 self.end_headers()
                 self.wfile.write(response.read())
@@ -40,24 +37,24 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             with urllib.request.urlopen(req) as response:
                 self.send_response(response.status)
                 for key, value in response.getheaders():
-    # TODO(martin-montas) Take this get headers 
-    # and display it in the Text area of the repeaters
                     self.send_header(key, value)
                 self.end_headers()
                 self.wfile.write(response.read())
         except Exception as e:
             self.send_error(500, f"Error forwarding request: {e}")
 
-
 def run_proxy_server(proxy_ip="127.0.0.1", proxy_port=8080):
     global httpd_instance
     global stop_event
     with socketserver.TCPServer((proxy_ip, proxy_port), ProxyHandler) as httpd:
-        httpd_instance = httpd
         print(f"Serving proxy at {proxy_ip}:{proxy_port}")
         try:
             while not stop_event.is_set():
-                httpd.handle_request()  # Process one request at a time
+                httpd_instance = httpd
+                httpd_instance.handle_request()  # Process one request at a time
+                httpd_instance = httpd
+                if stop_event.is_set():
+                    break
         except Exception as e:
             print(f"Server stopped: {e}")
         finally:
@@ -67,11 +64,11 @@ def stop_proxy_server():
     global httpd_instance
     global stop_event
     if httpd_instance:
-        print("Stopping the proxy server...")
-        stop_event.set()  # Signal the thread to stop
+        stop_event.set()
+        print("[*] Stopping the proxy server...")
+        httpd_instance.server_close()
         httpd_instance.shutdown()
         httpd_instance = None
-        print("[-]")
 
     else:
         print("Proxy server is not running.")
@@ -80,12 +77,12 @@ class SettingsLayout:
     def __init__(self, root) -> None:
         self.root = root
         tk.Label(self.root,text="Proxy IP").grid(row=0,column=0,
-        padx=10, pady=10)
+                                                 padx=10, pady=10)
         self.proxy_ip_entry = tk.Entry(self.root)
         self.proxy_ip_entry.grid(row=1, column=0, padx=10, pady=10)
 
         tk.Label(self.root,text="Proxy port").grid(row=2,column=0,
-        padx=10, pady=10)
+                                                   padx=10, pady=10)
         self.proxy_port_entry = tk.Entry(self.root)
         self.proxy_port_entry.grid(row=3, column=0, padx=10, pady=10)
 
@@ -95,8 +92,8 @@ class SettingsLayout:
 
         tk.Button(
             self.root, text="Disable Proxy", bg="orange",
-            command=stop_proxy_server,).grid(row=5, column=0, padx=10, pady=10)
- 
+            command=stop_proxy_server).grid(row=5, column=0, padx=10, pady=10)
+
     def button_command(self):
         ip = self.proxy_ip_entry.get()
         port = self.proxy_port_entry.get()
