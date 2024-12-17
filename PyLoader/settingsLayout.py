@@ -3,21 +3,20 @@ from mitmproxy import http
 
 
 def request_handler():
+# Intercept requests
     def request(flow: http.HTTPFlow) -> None:
-        '''
-        This hook is triggered for every HTTP request.
-        '''
-        print(f"Request: {flow.request.method} {flow.request.url}")
-        #flow.request.host = 
-        flow.request.port =  8080
+        # Restrict by IP and port (127.0.0.1:8080)
+        if flow.client_conn.address[0] == "127.0.0.1" and flow.server_conn.peername[1] == 8080:
+            print(f"Intercepted request to {flow.request.url}")
+        else:
+            print("Skipping non-browser traffic")
 
-def response(flow: http.HTTPFlow) -> None:
-    '''
-    This hook is triggered for every HTTP response.
-    '''
-
-    if flow.response:
-        print(f"Response: {flow.request.url} - Status: {flow.response.status_code}")
+    def response(flow: http.HTTPFlow) -> None:
+        '''
+        This hook is triggered for every HTTP response.
+        '''
+        if flow.response:
+            print(f"Response: {flow.request.url} - Status: {flow.response.status_code}")
 
 class SettingsLayout:
     def __init__(self, root) -> None:
