@@ -1,114 +1,115 @@
 import tkinter as tk
+import http.server
+import socketserver
+import urllib.request
 import threading
-import subprocess
-from mitmproxy import http
 
-# Global variables
-ip = "127.0.0.1"
-port = 8080
+# Global stop event to signal the server thread
 stop_event = threading.Event()
-mitmproxy_process = None  # To store the mitmproxy subprocess
+httpd_instance = None
 
-# Interceptor class to intercept HTTP requests and responses
-class Interceptor:
-    def request(self, flow: http.HTTPFlow) -> None:
-        print(f"Request URL: {flow.request.url}")
-        # You can modify the request here if needed
 
-    def response(self, flow: http.HTTPFlow) -> None:
-        print(f"Response URL: {flow.request.url}")
-        # You can modify the response here if needed
+class ProxyHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        target_url = self.path
+        print(f"Forwarding GET request to: {target_url}")
+        try:
+            with urllib.request.urlopen(target_url) as response:
+                self.send_response(response.status)
 
-# Write a temporary mitmproxy addon script
-def write_addon_script():
-    addon_script = """
-from mitmproxy import http
+                for key, value in response.getheaders():
+                    # TODO(martin-montas) Take this get headers functio
+                    # and display it in the Text area of the repeaters
+                    self.send_header(key, value)
+                self.end_headers()
+                self.wfile.write(response.read())
+        except Exception as e:
+            self.send_error(500, f"Error forwarding request: {e}")
 
-class Interceptor:
-    def request(self, flow: http.HTTPFlow) -> None:
-        print(f"Request URL: {flow.request.url}")
-        # You can modify the request here if needed
+    def do_POST(self):
+        target_url = self.path
+        print(f"Forwarding POST request to: {target_url}")
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
 
-    def response(self, flow: http.HTTPFlow) -> None:
-        print(f"Response URL: {flow.request.url}")
-        # You can modify the response here if needed
+            req = urllib.request.Request(target_url, data=body, method="POST")
+            for key in self.headers:
+                req.add_header(key, self.headers[key])
 
-addons = [
-    Interceptor()
-]
-"""
-    script_path = "interceptor_addon.py"
-    with open(script_path, "w") as f:
-        f.write(addon_script)
-    return script_path
+            with urllib.request.urlopen(req) as response:
+                self.send_response(response.status)
+                for key, value in response.getheaders():
+                    # TODO(martin-montas) Take this get headers
+                    # and display it in the Text area of the repeaters
+                    self.send_header(key, value)
+                self.end_headers()
+                self.wfile.write(response.read())
+        except Exception as e:
+            self.send_error(500, f"Error forwarding request: {e}")
 
-# Run the proxy server using subprocess
-def start_proxy():
-    global ip, port, mitmproxy_process
-    port = str(port)
-    
-    # Write the addon script to a temporary file
-    addon_script_path = write_addon_script()
-    
-    # Start mitmproxy with the addon script as a parameter
-    options = [
-        "mitmproxy",  # This is the mitmproxy command
-        "--listen-host", ip,
-        "--listen-port", str(port),
-        "--mode", "regular",
-        "-s", addon_script_path  # Specify the addon script
-    ]
-    
-    # Start mitmproxy as a subprocess
-    mitmproxy_process = subprocess.Popen(options, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(f"mitmproxy started on {ip}:{port}")
 
-# Stop the mitmproxy process
-def stop_proxy():
-    global mitmproxy_process
-    if mitmproxy_process:
-        mitmproxy_process.terminate()  # Terminate the subprocess
-        mitmproxy_process = None
-        print("mitmproxy process terminated.")
+def run_proxy_server(proxy_ip="127.0.0.1", proxy_port=8080):
+    global httpd_instance
+    global stop_event
+    with socketserver.TCPServer((proxy_ip, proxy_port), ProxyHandler) as httpd:
+        httpd_instance = httpd
+        print(f"Serving proxy at {proxy_ip}:{proxy_port}")
+        try:
+            while not stop_event.is_set():
+                httpd.handle_request()  # Process one request at a time
+        except Exception as e:
+            print(f"Server stopped: {e}")
+        finally:
+            httpd_instance = None
+
+
+def stop_proxy_server():
+    global httpd_instance
+    global stop_event
+    if httpd_instance:
+        print("Stopping the proxy server...")
+        stop_event.set()  # Signal the thread to stop
+        httpd_instance.shutdown()
+        httpd_instance = None
+        print("[-]")
+
     else:
-        print("mitmproxy process not running.")
+        print("Proxy server is not running.")
+
 
 class SettingsLayout:
     def __init__(self, root) -> None:
-        global ip, port
-
         self.root = root
         tk.Label(self.root, text="Proxy IP").grid(row=0, column=0, padx=10, pady=10)
-        self.ip = tk.Entry(self.root)
-        self.ip.grid(row=1, column=0, padx=10, pady=10)
+        self.proxy_ip_entry = tk.Entry(self.root)
+        self.proxy_ip_entry.grid(row=1, column=0, padx=10, pady=10)
 
         tk.Label(self.root, text="Proxy port").grid(row=2, column=0, padx=10, pady=10)
-        self.port = tk.Entry(self.root)
-        self.port.grid(row=3, column=0, padx=10, pady=10)
+        self.proxy_port_entry = tk.Entry(self.root)
+        self.proxy_port_entry.grid(row=3, column=0, padx=10, pady=10)
 
-        # Start Proxy button
-        tk.Button(self.root, text="Set Proxy", bg="orange", command=self.start_proxy).grid(row=4, column=0, padx=10, pady=10)
+        tk.Button(
+            self.root, text="Set Proxy", bg="orange", command=self.button_command
+        ).grid(row=4, column=0, padx=10, pady=10)
 
-        # Disable Proxy button
-        tk.Button(self.root, text="Disable Proxy", bg="orange", command=self.stop_proxy).grid(row=5, column=0, padx=10, pady=10)
+        tk.Button(
+            self.root,
+            text="Disable Proxy",
+            bg="orange",
+            command=stop_proxy_server,
+        ).grid(row=5, column=0, padx=10, pady=10)
 
-    def start_proxy(self):
-        global port, ip
-
-        # Get the user-provided IP and port
-        port = self.port.get()
-        ip = self.ip.get()
-
-        # Start mitmproxy in a new background thread
-        proxy_thread = threading.Thread(target=self.run_proxy_in_thread, daemon=True)
-        proxy_thread.start()
-        print("mitmproxy started in a new thread.")
-
-    def run_proxy_in_thread(self):
-        # Run the proxy in the background and pass the Interceptor addon
-        start_proxy()
-
-    def stop_proxy(self):
-        # Stop mitmproxy gracefully
-        stop_proxy()
-
+    def button_command(self):
+        ip = self.proxy_ip_entry.get()
+        port = self.proxy_port_entry.get()
+        try:
+            # Validate port input
+            port = int(port)
+            print(f"Starting proxy at IP: {ip}, Port: {port}")
+            # Run the proxy server in a separate thread
+            threading.Thread(
+                target=run_proxy_server, args=(ip, port), daemon=True
+            ).start()
+        except ValueError:
+            print("Invalid port number. Please enter a valid integer.")
