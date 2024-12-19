@@ -1,52 +1,13 @@
 import tkinter as tk
-import http.server
 import socketserver
-import urllib.request
 import threading
 
-# Global stop event to signal the server thread
+from PyLoader.proxyHandler import ProxyHandler
+from PyLoader.stoppableThreads import StoppableThread
+
 stop_event = threading.Event()
 httpd_instance = None
-
-
-class ProxyHandler(http.server.BaseHTTPRequestHandler):
-    def do_GET(self):
-        target_url = self.path
-        print(f"Forwarding GET request to: {target_url}")
-        try:
-            with urllib.request.urlopen(target_url) as response:
-                self.send_response(response.status)
-
-                for key, value in response.getheaders():
-                    # TODO(martin-montas) Take this get headers functio
-                    # and display it in the Text area of the repeaters
-                    self.send_header(key, value)
-                self.end_headers()
-                self.wfile.write(response.read())
-        except Exception as e:
-            self.send_error(500, f"Error forwarding request: {e}")
-
-    def do_POST(self):
-        target_url = self.path
-        print(f"Forwarding POST request to: {target_url}")
-        try:
-            content_length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(content_length)
-
-            req = urllib.request.Request(target_url, data=body, method="POST")
-            for key in self.headers:
-                req.add_header(key, self.headers[key])
-
-            with urllib.request.urlopen(req) as response:
-                self.send_response(response.status)
-                for key, value in response.getheaders():
-                    # TODO(martin-montas) Take this get headers
-                    # and display it in the Text area of the repeaters
-                    self.send_header(key, value)
-                self.end_headers()
-                self.wfile.write(response.read())
-        except Exception as e:
-            self.send_error(500, f"Error forwarding request: {e}")
+curr_thread = None
 
 
 def run_proxy_server(proxy_ip="127.0.0.1", proxy_port=8080):
@@ -57,25 +18,13 @@ def run_proxy_server(proxy_ip="127.0.0.1", proxy_port=8080):
         print(f"Serving proxy at {proxy_ip}:{proxy_port}")
         try:
             while not stop_event.is_set():
-                httpd.handle_request()  # Process one request at a time
+                httpd.handle_request()
         except Exception as e:
             print(f"Server stopped: {e}")
         finally:
+            httpd_instance.shutdown()
             httpd_instance = None
-
-
-def stop_proxy_server():
-    global httpd_instance
-    global stop_event
-    if httpd_instance:
-        print("Stopping the proxy server...")
-        stop_event.set()  # Signal the thread to stop
-        httpd_instance.shutdown()
-        httpd_instance = None
-        print("[-]")
-
-    else:
-        print("Proxy server is not running.")
+            stop_event.set()
 
 
 class SettingsLayout:
@@ -97,19 +46,26 @@ class SettingsLayout:
             self.root,
             text="Disable Proxy",
             bg="orange",
-            command=stop_proxy_server,
+            command=self.stop_proxy_server,
         ).grid(row=5, column=0, padx=10, pady=10)
 
     def button_command(self):
+        global curr_thread, ip, port
         ip = self.proxy_ip_entry.get()
         port = self.proxy_port_entry.get()
         try:
             # Validate port input
             port = int(port)
             print(f"Starting proxy at IP: {ip}, Port: {port}")
-            # Run the proxy server in a separate thread
-            threading.Thread(
-                target=run_proxy_server, args=(ip, port), daemon=True
-            ).start()
+
+            curr_thread = StoppableThread(target=run_proxy_server, args=(ip, port))
+            curr_thread.start()
+
         except ValueError:
             print("Invalid port number. Please enter a valid integer.")
+
+    def stop_proxy_server(self):
+        global curr_thread
+        if curr_thread:
+            curr_thread.stop()
+            print("Thread stopped!!!!")
