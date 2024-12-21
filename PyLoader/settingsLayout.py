@@ -15,13 +15,11 @@ class ProxyServer:
         self._thread = None
         self._stop_event = threading.Event()
         self._server = None
-    
     def start(self):
         if self._thread is None:
             self._thread = threading.Thread(target=self._run_server)
-            self._thread.daemon = True  # Make thread daemon so it exits when main program exits
+            self._thread.daemon = True
             self._thread.start()
-    
     def stop(self):
         if self._thread and self._server:
             self._stop_event.set()
@@ -31,20 +29,19 @@ class ProxyServer:
             self._thread = None
             self._server = None
             self._stop_event.clear()
-    
     def _run_server(self):
         try:
             self._server = ThreadedTCPServer((self._proxy_ip, self._proxy_port), ProxyHandler)
-            # Set socket options
             try:
                 self._server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
             except AttributeError:
-                pass  # SO_REUSEPORT not available on all platforms
+                pass
             print(f"Serving proxy at {self._proxy_ip}:{self._proxy_port}")
-            # Run the server in the current thread
             while not self._stop_event.is_set():
-                self._server.handle_request()
-            print("-- Proxy server stopped --")
+                self._server.serve_forever()
+
+            self._server.shutdown()
+
         except Exception as e:
             print(f"Error running proxy server: {e}")
         finally:
@@ -58,27 +55,21 @@ class SettingsLayout:
     def __init__(self, root):
         self.root = root
         self.proxy_server = None
-        # Configure grid weight to make the window resizable
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
-        # Create main frame
         main_frame = tk.Frame(self.root)
         main_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
-        # Server status indicator
         self.status_var = tk.StringVar(value="Status: Stopped")
         self.status_label = tk.Label(main_frame, textvariable=self.status_var)
         self.status_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
-        # IP input
         tk.Label(main_frame, text="Proxy IP:").grid(row=1, column=0, sticky="w")
         self.proxy_ip_entry = tk.Entry(main_frame)
         self.proxy_ip_entry.insert(0, "127.0.0.1")
         self.proxy_ip_entry.grid(row=1, column=1, sticky="ew", padx=(10, 0))
-        # Port input
         tk.Label(main_frame, text="Proxy Port:").grid(row=2, column=0, sticky="w", pady=(10, 0))
         self.proxy_port_entry = tk.Entry(main_frame)
         self.proxy_port_entry.insert(0, "8080")
         self.proxy_port_entry.grid(row=2, column=1, sticky="ew", padx=(10, 0), pady=(10, 0))
-        # Buttons frame
         button_frame = tk.Frame(main_frame)
         button_frame.grid(row=3, column=0, columnspan=2, pady=(20, 0))
         self.start_button = tk.Button(
@@ -100,22 +91,17 @@ class SettingsLayout:
     def start_proxy(self):
         if self.proxy_server:
             self.stop_proxy()
-            
         ip = self.proxy_ip_entry.get()
         port = self.proxy_port_entry.get()
-        
         try:
             port = int(port)
             self.proxy_server = ProxyServer(ip, port)
             self.proxy_server.start()
-            
-            # Update UI
             self.status_var.set(f"Status: Running on {ip}:{port}")
             self.start_button.config(state=tk.DISABLED)
             self.stop_button.config(state=tk.NORMAL)
             self.proxy_ip_entry.config(state=tk.DISABLED)
             self.proxy_port_entry.config(state=tk.DISABLED)
-            
         except ValueError:
             print("Invalid port number. Please enter a valid integer.")
         except Exception as e:
@@ -129,7 +115,6 @@ class SettingsLayout:
                 print(f"Error stopping proxy: {e}")
             finally:
                 self.proxy_server = None
-                # Update UI
                 self.status_var.set("Status: Stopped")
                 self.start_button.config(state=tk.NORMAL)
                 self.stop_button.config(state=tk.DISABLED)
