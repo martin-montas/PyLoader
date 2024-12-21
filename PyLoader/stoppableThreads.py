@@ -1,4 +1,5 @@
 import threading
+import pdb
 
 
 class StoppableThread(threading.Thread):
@@ -15,8 +16,11 @@ class StoppableThread(threading.Thread):
                 self.target(*self.args)
 
     def stop(self):
-        print("stopping the thread")
+        pdb.set_trace()
         self._stop_event.set()
+        print("stopping the thread")
+
+
 
 
 # Example usage
