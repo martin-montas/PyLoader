@@ -4,8 +4,13 @@ import socketserver
 import threading
 from datetime import datetime
 
-
 from PyLoader.proxyHandler import ProxyHandler
+
+
+RED = "\033[31m"
+GREEN = "\033[32m"
+BLUE = "\033[34m"
+RESET = "\033[0m"
 
 class ThreadedTCPServer(socketserver.ThreadingTCPServer):
     daemon_threads = True
@@ -33,32 +38,26 @@ class ProxyServer:
             self._server = None
             self._stop_event.clear()
     def _run_server(self):
+        current_time = datetime.now().time()
         try:
             self._server = ThreadedTCPServer((self._proxy_ip, self._proxy_port), ProxyHandler)
             try:
                 self._server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
             except AttributeError:
                 pass
-            print(f"Serving proxy at {self._proxy_ip}:{self._proxy_port}")
+            print(f"{current_time} {BLUE}[INFO]{RESET} Serving proxy at {self._proxy_ip}:{self._proxy_port}")
             while not self._stop_event.is_set():
                 self._server.serve_forever()
-
-            print("++++++++++++++++++++++++++++++++++++++++")
-            print(" ")
-            current_time = datetime.now().time()
-            print(f" {current_time} Closed the Server Proxy")
-            print(" ")
-            print("++++++++++++++++++++++++++++++++++++++++")
             self._server.shutdown()
 
         except Exception as e:
-            print(f"Error running proxy server: {e}")
+            print(f"{current_time} {RED}[ERROR]{RESET} Error running proxy server: {e}")
         finally:
             if self._server:
                 try:
                     self._server.server_close()
                 except Exception as e:
-                    print(f"Error closing server: {e}")
+                    print(f"{current_time}{current_time} {RED}[ERROR]{RESET} Error closing server: {e}")
 
 class SettingsLayout:
     def __init__(self, root):
@@ -100,36 +99,33 @@ class SettingsLayout:
     def start_proxy(self):
         if self.proxy_server:
             self.stop_proxy()
-
         ip = self.proxy_ip_entry.get()
         port = self.proxy_port_entry.get()
         try:
             port = int(port)
             self.proxy_server = ProxyServer(ip, port)
             self.proxy_server.start()
-
             current_time = datetime.now().time()
-            print("++++++++++++++++++++++++++++++++++++++++")
-            print(" ")
-            print(f" {current_time} Started the Server Proxy")
-            print(" ")
-            print("++++++++++++++++++++++++++++++++++++++++")
             self.status_var.set(f"Status: Running on {ip}:{port}")
             self.start_button.config(state=tk.DISABLED)
             self.stop_button.config(state=tk.NORMAL)
             self.proxy_ip_entry.config(state=tk.DISABLED)
             self.proxy_port_entry.config(state=tk.DISABLED)
         except ValueError:
-            print("Invalid port number. Please enter a valid integer.")
+            current_time = datetime.now().time()
+            print(f"{current_time} {RED}[ERROR]{RESET} Invalid port number. Please enter a valid integer.")
+            self.status_var.set(f"Invalid port number. Please enter a valid integer{ip}:{port}")
         except Exception as e:
-            print(f"Error starting proxy: {e}")
+            current_time = datetime.now().time()
+            print(f"{current_time} {RED}[ERROR] {RESET} Error starting proxy: {e}")
 
     def stop_proxy(self):
         if self.proxy_server:
             try:
                 self.proxy_server.stop()
             except Exception as e:
-                print(f"Error stopping proxy: {e}")
+                current_time = datetime.now().time()
+                print(f"{current_time} {RED} [ERROR]{RESET} Error stopping proxy: {e}")
             finally:
                 self.proxy_server = None
                 self.status_var.set("Status: Stopped")

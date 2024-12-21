@@ -1,4 +1,4 @@
-tkinter 
+tkinter
 socketserver
 threading
-psutil
+pyinstaller
