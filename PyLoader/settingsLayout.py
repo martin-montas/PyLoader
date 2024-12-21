@@ -137,4 +137,3 @@ class SettingsLayout:
                 self.stop_button.config(state=tk.DISABLED)
                 self.proxy_ip_entry.config(state=tk.NORMAL)
                 self.proxy_port_entry.config(state=tk.NORMAL)
-
