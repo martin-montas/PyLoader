@@ -2,6 +2,9 @@ import tkinter as tk
 import socket
 import socketserver
 import threading
+from datetime import datetime
+
+
 from PyLoader.proxyHandler import ProxyHandler
 
 class ThreadedTCPServer(socketserver.ThreadingTCPServer):
@@ -40,6 +43,12 @@ class ProxyServer:
             while not self._stop_event.is_set():
                 self._server.serve_forever()
 
+            print("++++++++++++++++++++++++++++++++++++++++")
+            print(" ")
+            current_time = datetime.now().time()
+            print(f" {current_time} Closed the Server Proxy")
+            print(" ")
+            print("++++++++++++++++++++++++++++++++++++++++")
             self._server.shutdown()
 
         except Exception as e:
@@ -91,12 +100,20 @@ class SettingsLayout:
     def start_proxy(self):
         if self.proxy_server:
             self.stop_proxy()
+
         ip = self.proxy_ip_entry.get()
         port = self.proxy_port_entry.get()
         try:
             port = int(port)
             self.proxy_server = ProxyServer(ip, port)
             self.proxy_server.start()
+
+            current_time = datetime.now().time()
+            print("++++++++++++++++++++++++++++++++++++++++")
+            print(" ")
+            print(f" {current_time} Started the Server Proxy")
+            print(" ")
+            print("++++++++++++++++++++++++++++++++++++++++")
             self.status_var.set(f"Status: Running on {ip}:{port}")
             self.start_button.config(state=tk.DISABLED)
             self.stop_button.config(state=tk.NORMAL)
