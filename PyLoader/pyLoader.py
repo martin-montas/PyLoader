@@ -1,7 +1,6 @@
 from tkinter import ttk
 from PyLoader.topMenu import TopDefaultMenu
-from PyLoader.initialLayout import InitialLayout
-from PyLoader.settingsLayout import SettingsLayout
+from PyLoader.repeaterLayout import RepeaterLayout
 
 
 class PyLoader:
@@ -16,26 +15,17 @@ class PyLoader:
         self.tabs.grid(row=0, column=0, sticky="nsew")
 
         repeater = ttk.Frame(self.tabs, width=500, height=500)
-        intruder = ttk.Frame(self.tabs, width=500, height=500)
-        settings = ttk.Frame(self.tabs, width=500, height=500)
-
         repeater.columnconfigure(0, weight=1)
-        intruder.columnconfigure(0, weight=1)
-        settings.columnconfigure(0, weight=1)
-
         repeater.pack(fill="both", expand=True)
-        intruder.pack(fill="both", expand=True)
-        settings.pack(fill="both", expand=True)
-
-        self.tabs.add(settings, text="Settings")
         self.tabs.add(repeater, text="Repeater")
+
+        intruder = ttk.Frame(self.tabs, width=500, height=500)
+        intruder.columnconfigure(0, weight=1)
+        intruder.pack(fill="both", expand=True)
         self.tabs.add(intruder, text="Intruder")
 
         # the repeater tab
-        InitialLayout(repeater)
-
-        # the settings tab
-        SettingsLayout(settings)
+        RepeaterLayout(repeater)
 
         # the top tab
         TopDefaultMenu(root)

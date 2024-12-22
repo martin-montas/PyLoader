@@ -1,5 +1,5 @@
-from PyLoader.sendButton import SendButton
 import tkinter as tk
+from PyLoader.proxyHandler import HTTPHandler, RequestBoxParser
 
 
 class RequestBox:
@@ -7,15 +7,17 @@ class RequestBox:
 
     def __init__(self, root, bg=None, x=30, y=150, width=75, height=25):
         self.root = root
-        # self.bg = "lightgrey"
+        self.bg = "lightgrey"
         self.x = x
         self.y = y
+        self.url_box = tk.Entry(self.root)
+        self.url_box.pack(side="left")
         self.width = width
         self.height = height
-        self.bg = "#FFEFD5"
+        self.bg = "lightgrey"
         self.fg = "black"
         self.button_rel = 69
-        self.button_bg = "#f58216"
+        self.button_bg = "lightgrey"
         self.button_fg = "white"
 
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
@@ -81,4 +83,14 @@ class RequestBox:
         pass
 
     def clear_command(self):
+        """ """
         pass
+
+    def handle_request(self):
+        """ """
+        http = HTTPHandler()
+        request = http.handle_request(self.url_box.get())
+        parser = RequestBoxParser(request)
+        headers = parser.parse_request_box()
+        for key, value in headers.items():
+            self.text_space.insert(tk.END, f"{key}: {value}\n")
