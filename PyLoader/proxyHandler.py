@@ -1,5 +1,4 @@
 import requests
-import tkinter as tk
 
 
 class HTTPHandler:
@@ -10,16 +9,6 @@ class HTTPHandler:
         """
         Send the modified request to the actual server.
         """
-        try:
-            if body:
-                response = requests.post(url, headers=headers, data=body)
-            else:
-                response = requests.get(url, headers=headers)
-                return response
-        except requests.exceptions.RequestException as e:
-            return str(e)
-
-
 class RequestBoxParser:
     def __init__(self, response):
         self._response = response
@@ -38,3 +27,4 @@ class RequestBoxParser:
                 headers[key.strip()] = value.strip()
 
         return headers
+

@@ -1,6 +1,6 @@
 test/
 todo.md
-pyloader.spec
 dist/
 build/
+pyloader.spec
 __pycache__/

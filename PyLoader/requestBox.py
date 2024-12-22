@@ -3,7 +3,7 @@ from PyLoader.proxyHandler import HTTPHandler, RequestBoxParser
 
 
 class RequestBox:
-    """ """
+    ''' '''
 
     def __init__(self, root, bg=None, x=30, y=150, width=75, height=25):
         self.root = root
@@ -79,15 +79,15 @@ class RequestBox:
         )
 
     def paste_command(self):
-        """ """
+        ''' '''
         pass
 
     def clear_command(self):
-        """ """
+        ''' '''
         pass
 
     def handle_request(self):
-        """ """
+        ''' '''
         http = HTTPHandler()
         request = http.handle_request(self.url_box.get())
         parser = RequestBoxParser(request)

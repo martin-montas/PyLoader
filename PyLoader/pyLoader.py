@@ -1,5 +1,4 @@
 from tkinter import ttk
-from PyLoader.topMenu import TopDefaultMenu
 from PyLoader.repeaterLayout import RepeaterLayout
 
 
@@ -27,7 +26,5 @@ class PyLoader:
         # the repeater tab
         RepeaterLayout(repeater)
 
-        # the top tab
-        TopDefaultMenu(root)
 
         self.root.config(bg=self.bg)

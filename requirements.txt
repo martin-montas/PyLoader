@@ -1,2 +1,4 @@
-mitmproxy
-tk
+tkinter
+socketserver
+threading
+pyinstaller
