@@ -1,6 +1,7 @@
+import socket
+import ssl
 import http.server
 import urllib.request
-
 
 class ProxyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -11,8 +12,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                 self.send_response(response.status)
 
                 for key, value in response.getheaders():
-                    # TODO(martin-montas) Take this get headers functio
-                    # and display it in the Text area of the repeaters
+                    print(f"{key} is {value}")
                     self.send_header(key, value)
                 self.end_headers()
                 self.wfile.write(response.read())
@@ -33,10 +33,39 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             with urllib.request.urlopen(req) as response:
                 self.send_response(response.status)
                 for key, value in response.getheaders():
-                    # TODO(martin-montas) Take this get headers
-                    # and display it in the Text area of the repeaters
                     self.send_header(key, value)
                 self.end_headers()
                 self.wfile.write(response.read())
         except Exception as e:
             self.send_error(500, f"Error forwarding request: {e}")
+
+    def do_CONNECT(self):
+        host, port = self.path.split(":")
+        port = int(port)
+
+        try:
+            upstream_socket = socket.create_connection((host, port))
+            self.send_response(200)
+            self.end_headers()
+            context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            context.load_cert_chain(certfile="/home/william/personal/pyloader.cer", keyfile="pyloader.key")
+            client_ssl = context.wrap_socket(self.connection, server_side=True)
+            self._tunnel_data(client_ssl, upstream_socket)
+        except Exception as e:
+            self.send_error(500, f"Failed to establish a connection: {e}")
+    def _tunnel_data(self, client_socket, upstream_socket):
+        import threading
+        def forward(source, target):
+            try:
+                while True:
+                    data = source.recv(4096)
+                    if not data:
+                        break
+                    target.sendall(data)
+            except:
+                pass
+            finally:
+                source.close()
+                target.close()
+        threading.Thread(target=forward, args=(client_socket, upstream_socket), daemon=True).start()
+        threading.Thread(target=forward, args=(upstream_socket, client_socket), daemon=True).start()
