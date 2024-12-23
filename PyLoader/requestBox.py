@@ -10,8 +10,11 @@ class RequestBox:
         self.bg = "lightgrey"
         self.x = x
         self.y = y
+
+        # url box
         self.url_box = tk.Entry(self.root)
         self.url_box.pack(side="left")
+
         self.width = width
         self.height = height
         self.bg = "lightgrey"
@@ -34,6 +37,8 @@ class RequestBox:
             relief="flat",
         )
         spacer_frame.pack(fill="both", expand=True)
+
+        # Request box text area
         self.text_space = tk.Text(
             spacer_frame,
             width=self.width,
