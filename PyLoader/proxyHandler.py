@@ -10,10 +10,21 @@ class HTTPHandler:
         Send the modified request to the actual server.
         '''
         try:
-            if body:
-                return requests.post(url, headers=headers, data=body)
+            if not url.startswith("http://"):
+                if body:
+                    return requests.post("http://" + url, headers=headers, data=body)
+                else:
+                    return requests.get("https://" + url, headers=headers)
+            if not url.startswith("https://"):
+                if body:
+                    return requests.post("http://" + url, headers=headers, data=body)
+                else:
+                    return requests.get("https://" + url, headers=headers)
             else:
-                return requests.get(url, headers=headers)
+                if body:
+                    return requests.post(url, headers=headers, data=body)
+                else:
+                    return requests.get(url, headers=headers)
 
         except requests.exceptions.RequestException as e:
             print(f"Error: {e}")
@@ -30,11 +41,6 @@ class RequestBoxParser:
         Accept: text/html,application/xhtml+xml
         Content-Type: application/json
         '''
-        headers = {}
-        for line in self._response.split("\n"):
-            if ":" in line:
-                key, value = line.split(":", 1)
-                headers[key.strip()] = value.strip()
 
-        return headers
+        return self._response.headers
 
