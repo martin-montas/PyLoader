@@ -26,5 +26,4 @@ class PyLoader:
         # the repeater tab
         RepeaterLayout(repeater)
 
-
         self.root.config(bg=self.bg)

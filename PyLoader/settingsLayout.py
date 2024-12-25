@@ -12,9 +12,11 @@ GREEN = "\033[32m"
 BLUE = "\033[34m"
 RESET = "\033[0m"
 
+
 class ThreadedTCPServer(socketserver.ThreadingTCPServer):
     daemon_threads = True
     allow_reuse_address = True
+
 
 class ProxyServer:
     def __init__(self, proxy_ip, proxy_port):
@@ -23,11 +25,13 @@ class ProxyServer:
         self._thread = None
         self._stop_event = threading.Event()
         self._server = None
+
     def start(self):
         if self._thread is None:
             self._thread = threading.Thread(target=self._run_server)
             self._thread.daemon = True
             self._thread.start()
+
     def stop(self):
         if self._thread and self._server:
             self._stop_event.set()
@@ -37,15 +41,22 @@ class ProxyServer:
             self._thread = None
             self._server = None
             self._stop_event.clear()
+
     def _run_server(self):
         current_time = datetime.now().time()
         try:
-            self._server = ThreadedTCPServer((self._proxy_ip, self._proxy_port), ProxyHandler)
+            self._server = ThreadedTCPServer(
+                (self._proxy_ip, self._proxy_port), ProxyHandler
+            )
             try:
-                self._server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+                self._server.socket.setsockopt(
+                    socket.SOL_SOCKET, socket.SO_REUSEPORT, 1
+                )
             except AttributeError:
                 pass
-            print(f"{current_time} {BLUE}[INFO]{RESET} Serving proxy at {self._proxy_ip}:{self._proxy_port}")
+            print(
+                f"{current_time} {BLUE}[INFO]{RESET} Serving proxy at {self._proxy_ip}:{self._proxy_port}"
+            )
             while not self._stop_event.is_set():
                 self._server.serve_forever()
             self._server.shutdown()
@@ -57,7 +68,10 @@ class ProxyServer:
                 try:
                     self._server.server_close()
                 except Exception as e:
-                    print(f"{current_time}{current_time} {RED}[ERROR]{RESET} Error closing server: {e}")
+                    print(
+                        f"{current_time}{current_time} {RED}[ERROR]{RESET} Error closing server: {e}"
+                    )
+
 
 class SettingsLayout:
     def __init__(self, root):
@@ -74,17 +88,18 @@ class SettingsLayout:
         self.proxy_ip_entry = tk.Entry(main_frame)
         self.proxy_ip_entry.insert(0, "127.0.0.1")
         self.proxy_ip_entry.grid(row=1, column=1, sticky="ew", padx=(10, 0))
-        tk.Label(main_frame, text="Proxy Port:").grid(row=2, column=0, sticky="w", pady=(10, 0))
+        tk.Label(main_frame, text="Proxy Port:").grid(
+            row=2, column=0, sticky="w", pady=(10, 0)
+        )
         self.proxy_port_entry = tk.Entry(main_frame)
         self.proxy_port_entry.insert(0, "8080")
-        self.proxy_port_entry.grid(row=2, column=1, sticky="ew", padx=(10, 0), pady=(10, 0))
+        self.proxy_port_entry.grid(
+            row=2, column=1, sticky="ew", padx=(10, 0), pady=(10, 0)
+        )
         button_frame = tk.Frame(main_frame)
         button_frame.grid(row=3, column=0, columnspan=2, pady=(20, 0))
         self.start_button = tk.Button(
-            button_frame,
-            text="Start Proxy",
-            command=self.start_proxy,
-            width=12
+            button_frame, text="Start Proxy", command=self.start_proxy, width=12
         )
         self.start_button.pack(side=tk.LEFT, padx=5)
         self.stop_button = tk.Button(
@@ -92,7 +107,7 @@ class SettingsLayout:
             text="Stop Proxy",
             command=self.stop_proxy,
             width=12,
-            state=tk.DISABLED
+            state=tk.DISABLED,
         )
         self.stop_button.pack(side=tk.LEFT, padx=5)
 
@@ -113,8 +128,12 @@ class SettingsLayout:
             self.proxy_port_entry.config(state=tk.DISABLED)
         except ValueError:
             current_time = datetime.now().time()
-            print(f"{current_time} {RED}[ERROR]{RESET} Invalid port number. Please enter a valid integer.")
-            self.status_var.set(f"Invalid port number. Please enter a valid integer{ip}:{port}")
+            print(
+                f"{current_time} {RED}[ERROR]{RESET} Invalid port number. Please enter a valid integer."
+            )
+            self.status_var.set(
+                f"Invalid port number. Please enter a valid integer{ip}:{port}"
+            )
         except Exception as e:
             current_time = datetime.now().time()
             print(f"{current_time} {RED}[ERROR] {RESET} Error starting proxy: {e}")
