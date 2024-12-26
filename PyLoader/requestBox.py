@@ -21,17 +21,16 @@ class RequestBox:
 
         # Url box
         self.url_box = tk.Entry(self.root, bg=self.bg, fg=self.fg)
-        self.url_box.pack(side="top")
-        self.url_box.place(x=50, y=5)
-        self.url_box_tag = tk.Label(self.root, text="URL: ")
-        self.url_box_tag.place(x=0, y=5)
+        self.url_box.place(x=50, y=30)
+        self.url_box_tag = tk.Label(self.root, text="URL", bg=self.bg, fg=self.fg)
+        self.url_box_tag.place(x=50, y=0)
 
         # URL box button
         self.send_button = tk.Button(
             self.root,
             text="Send",
-            bg="lightgrey",
-            fg="black",
+            bg=self.bg,
+            fg=self.fg,
             bd=3,
             width=10,
             height=0,
@@ -46,8 +45,8 @@ class RequestBox:
         self.clear_button = tk.Button(
             self.root,
             text="Clear",
-            bg="lightgrey",
-            fg="black",
+            bg=self.bg,
+            fg=self.fg,
             bd=3,
             width=10,
             height=0,
@@ -60,13 +59,14 @@ class RequestBox:
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
         outer_frame.pack(padx=self.width, pady=self.height, fill="both", expand=True)
         outer_frame.place(x=20, y=140)
-        label = tk.Label(self.root, text="Requests", fg="black")
+        label = tk.Label(self.root, text="Requests", fg=self.fg, bg=self.bg)
         label.place(x=self.x, y=135, anchor="nw")
         spacer_frame = tk.Frame(
             outer_frame,
             padx=30,
             pady=30,
             relief="flat",
+            bg=self.bg,
         )
         spacer_frame.pack(fill="both", expand=True)
 
@@ -91,6 +91,7 @@ class RequestBox:
         http = HTTPHandler()
         if not self.url_box.get():
             self.clear_command()
+
         request = http.handle_request(self.url_box.get())
         parser = RequestBoxParser(request)
         headers = parser.parse_request_box()

@@ -26,16 +26,16 @@ class ResponseBox:
         self.bg = bg
         self.fg = fg
 
-        outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg="lightgrey")
+        outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
         outer_frame.pack(padx=self.width, pady=self.height, fill="both", expand=True)
         outer_frame.place(x=self.x, y=140)
 
-        label = tk.Label(self.root, text="Response", bg="lightgrey", fg="black")
+        label = tk.Label(self.root, text="Response", bg=self.bg, fg=self.fg)
         label.place(x=self.x + 75, y=135)
 
         spacer_frame = tk.Frame(
             outer_frame,
-            bg="lightgrey",
+            bg=self.bg,
             padx=30,
             pady=30,
             relief="flat",
@@ -50,6 +50,7 @@ class ResponseBox:
             relief="flat",
             wrap="word",
         )
+        self.text_space.configure(state="disabled")
         self.text_space.pack(fill="both", expand=True)
         # Pack the Text widget inside spacer_frame
 
