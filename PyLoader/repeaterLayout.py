@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from PyLoader.requestBox import RequestBox
 from PyLoader.responseBox import ResponseBox
-from PyLoader.rightFrameInput import RightFrameInput
 
 
 class RepeaterLayout:
@@ -18,7 +17,7 @@ class RepeaterLayout:
         self.x = 140
         self.y = 100
         self.left_pad = 20
-        self.footer_version = "PyLoader v0.0.1"
+        self.footer_version = "Version: v0.0.1"
         self.fg = "black"
         self.button_bg = "lightgrey"
         self.button_fg = "black"
@@ -28,9 +27,8 @@ class RepeaterLayout:
         self.win_height = self.root.winfo_height()
         self.button_rel = 69
 
-        RequestBox(self.root)
-        ResponseBox(self.root)
-        RightFrameInput(self.root)
+        RequestBox(self.root, bg=self.bg, fg=self.fg)
+        ResponseBox(self.root, bg=self.bg, fg=self.fg)
 
         footer = tk.Label(self.root, text=self.footer_version, bg=self.bg, fg=self.fg)
         footer.pack(side="bottom")

@@ -4,7 +4,9 @@ import tkinter as tk
 class ResponseBox:
     """ """
 
-    def __init__(self, root, bg="#FFEFD5", x=800, y=150, width=75, height=25):
+    def __init__(
+        self, root, bg="#FFEFD5", x=800, y=150, width=75, height=25, fg="black"
+    ):
         self.root = root
         self.win_height = self.root.winfo_height()
         self.win_width = self.root.winfo_width()
@@ -15,7 +17,7 @@ class ResponseBox:
         self.button_bg = "lightgrey"
         self.y = y
         self.bg = bg
-        self.fg = "black"
+        self.fg = fg
 
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg="lightgrey")
         outer_frame.pack(padx=self.width, pady=self.height, fill="both", expand=True)
@@ -44,14 +46,6 @@ class ResponseBox:
         self.text_space.pack(
             fill="both", expand=True
         )  # Pack the Text widget inside spacer_frame
-
-        tk.Button(
-            self.root,
-            text="Send",
-            fg="black",
-            relief="groove",
-            command=self.response_button_command,
-        ).place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
     def response_button_command(self):
         pass

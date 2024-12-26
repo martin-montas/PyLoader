@@ -1,19 +1,20 @@
 import tkinter as tk
-from PyLoader.proxyHandler import HTTPHandler, RequestBoxParser
+from PyLoader.httpHandler import HTTPHandler, RequestBoxParser
 
 
 class RequestBox:
-    """ """
+    """
+    Class to initialize the request box
+    """
 
-    def __init__(self, root, bg=None, x=30, y=150, width=75, height=25):
+    def __init__(self, root, bg, fg, x=30, y=150, width=75, height=25):
         self.root = root
-        self.bg = "lightgrey"
+        self.bg = bg
+        self.fg = fg
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.bg = "lightgrey"
-        self.fg = "black"
         self.button_rel = 69
         self.button_bg = "lightgrey"
         self.button_fg = "white"
@@ -25,8 +26,8 @@ class RequestBox:
         self.url_box_tag = tk.Label(self.root, text="URL: ")
         self.url_box_tag.place(x=0, y=5)
 
-        # Url box button
-        self.url_box_button = tk.Button(
+        # URL box button
+        self.send_button = tk.Button(
             self.root,
             text="Send",
             bg="lightgrey",
@@ -37,6 +38,8 @@ class RequestBox:
             relief="raised",
             command=self.handle_request,
         )
+
+        self.send_button.place(x=50, y=90)
         self.url_box.bind("<Return>", self.handle_request_event)
 
         # Clear button
@@ -51,9 +54,7 @@ class RequestBox:
             relief="raised",
             command=self.clear_command,
         )
-        self.clear_button.place(x=50, y=60)
-
-        self.url_box_button.place(bordermode="outside", x=50, y=30)
+        self.clear_button.place(x=190, y=90)
 
         # Request box label
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)

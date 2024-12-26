@@ -26,4 +26,7 @@ class PyLoader:
         # the repeater tab
         RepeaterLayout(repeater)
 
+        # the intruder tab
+        # IntruderLayout(intruder)
+
         self.root.config(bg=self.bg)
