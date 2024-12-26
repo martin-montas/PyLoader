@@ -10,6 +10,7 @@ class ResponseBox:
         bg="#FFEFD5",
         x=800,
         y=150,
+        # FIXME(martin-montas) Just hard code the width and height when you have time
         width=75,
         height=25,
         fg="black",
@@ -19,19 +20,20 @@ class ResponseBox:
         self.win_width = self.root.winfo_width()
         self.width = width
         self.height = height
-        self.x = x + 60
-        self.button_rel = 721
+        self.x = 1000 - (75)
         self.button_bg = "lightgrey"
         self.y = y
         self.bg = bg
         self.fg = fg
 
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
-        outer_frame.pack(padx=self.width, pady=self.height, fill="both", expand=True)
+        outer_frame.pack(
+            padx=self.width, pady=self.height, fill="both", expand=True, side="right"
+        )
         outer_frame.place(x=self.x, y=140)
 
         label = tk.Label(self.root, text="Response", bg=self.bg, fg=self.fg)
-        label.place(x=self.x + 75, y=135)
+        label.place(x=self.x + 15, y=135)
 
         spacer_frame = tk.Frame(
             outer_frame,
@@ -40,19 +42,28 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
-        spacer_frame.pack(fill="both", expand=True)
-        self.text_space = tk.Text(
+
+        spacer_frame.pack(fill="both", expand=True, side="right")
+        self.response_box_text = tk.Text(
             spacer_frame,
             width=self.width,
-            bg=self.bg,
             height=self.height,
+            bg=self.bg,
+            fg=self.fg,
             bd=3,
             relief="flat",
             wrap="word",
         )
-        self.text_space.configure(state="disabled")
-        self.text_space.pack(fill="both", expand=True)
-        # Pack the Text widget inside spacer_frame
 
-    def response_button_command(self):
-        pass
+        self.response_box_text.configure(state="disabled")
+        self.response_box_text.pack(fill="both", expand=True)
+
+    def insert_to_box(self, index, text):
+        self.response_box_text.configure(state="normal")
+        self.response_box_text.insert(index, text)
+        self.response_box_text.configure(state="disabled")
+
+    def delete_to_box(self, index, text):
+        self.response_box_text.configure(state="normal")
+        self.response_box_text.delete(index, text)
+        self.response_box_text.configure(state="disabled")

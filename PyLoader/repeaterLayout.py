@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 from PyLoader.requestBox import RequestBox
-from PyLoader.responseBox import ResponseBox
 
 
 class RepeaterLayout:
@@ -25,8 +24,6 @@ class RepeaterLayout:
         self.button_rel = 69
 
         RequestBox(self.root, bg=bg, fg=fg)
-        ResponseBox(self.root, bg=bg, fg=fg)
-
         footer = tk.Label(self.root, text=self.footer_version, bg=bg, fg=fg)
         footer.pack(side="bottom")
 
