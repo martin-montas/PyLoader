@@ -1,4 +1,7 @@
 from tkinter import ttk
+
+import tkinter.font as font
+
 from PyLoader.repeaterLayout import RepeaterLayout
 
 
@@ -12,6 +15,8 @@ class PyLoader:
         self.tabs = ttk.Notebook(self.root)
         self.tabs.pack()
         self.tabs.grid(row=0, column=0, sticky="nsew")
+        self.defaultFont = font.nametofont("TkDefaultFont")
+        self.defaultFont.configure(family="Arial", size=15)
 
         repeater = ttk.Frame(self.tabs, width=500, height=500)
         repeater.columnconfigure(0, weight=1)

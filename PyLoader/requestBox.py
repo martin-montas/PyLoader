@@ -20,7 +20,7 @@ class RequestBox:
         self.button_fg = "white"
 
         # Url box
-        self.url_box = tk.Entry(self.root)
+        self.url_box = tk.Entry(self.root, bg=self.bg, fg=self.fg)
         self.url_box.pack(side="top")
         self.url_box.place(x=50, y=5)
         self.url_box_tag = tk.Label(self.root, text="URL: ")
@@ -79,6 +79,7 @@ class RequestBox:
             bd=3,
             relief="flat",
             wrap="word",
+            fg=self.fg,
         )
         self.text_space.pack(fill="both", expand=True)
 

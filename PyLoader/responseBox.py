@@ -5,7 +5,14 @@ class ResponseBox:
     """ """
 
     def __init__(
-        self, root, bg="#FFEFD5", x=800, y=150, width=75, height=25, fg="black"
+        self,
+        root,
+        bg="#FFEFD5",
+        x=800,
+        y=150,
+        width=75,
+        height=25,
+        fg="black",
     ):
         self.root = root
         self.win_height = self.root.winfo_height()
@@ -33,7 +40,7 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
-        spacer_frame.pack(fill="both", expand=True)  # Pack after defining the frame
+        spacer_frame.pack(fill="both", expand=True)
         self.text_space = tk.Text(
             spacer_frame,
             width=self.width,
@@ -43,9 +50,8 @@ class ResponseBox:
             relief="flat",
             wrap="word",
         )
-        self.text_space.pack(
-            fill="both", expand=True
-        )  # Pack the Text widget inside spacer_frame
+        self.text_space.pack(fill="both", expand=True)
+        # Pack the Text widget inside spacer_frame
 
     def response_button_command(self):
         pass
