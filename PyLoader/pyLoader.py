@@ -11,8 +11,8 @@ class PyLoader:
 
     def __init__(self, root):
         self.root = root
-        self.bg = "#000000"
-        self.fg = "white"
+        self.bg = "lightgrey"
+        self.fg = "black"
         style = ttk.Style()
         self.tabs = ttk.Notebook(self.root)
         style.configure("TNotebook.Tab", background=self.bg, foreground=self.fg)

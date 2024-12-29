@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from PyLoader.httpHandler import HTTPHandler, RequestBoxParser
 from PyLoader.responseBox import ResponseBox
 
@@ -34,8 +35,7 @@ class RequestBox:
         self.send_button = tk.Button(
             self.root,
             text="Send",
-            bg=self.bg,
-            fg=self.fg,
+            bg=self.bg, fg=self.fg,
             bd=3,
             width=10,
             height=0,

@@ -8,7 +8,7 @@ class ResponseBox:
         self,
         root,
         bg="#FFEFD5",
-        x=800,
+        x=850,
         y=150,
         # FIXME(martin-montas) Just hard code the width and height when you have time
         width=75,
@@ -20,7 +20,7 @@ class ResponseBox:
         self.win_width = self.root.winfo_width()
         self.width = width
         self.height = height
-        self.x = 1000 - (75)
+        self.x =x  
         self.button_bg = "lightgrey"
         self.y = y
         self.bg = bg
@@ -56,7 +56,9 @@ class ResponseBox:
         )
 
         self.response_box_text.configure(state="disabled")
-        self.response_box_text.pack(fill="both", expand=True)
+        self.response_box_text.place(x=self.x, y=self.y)
+
+        self.response_box_text.pack(fill="both", expand=True, side="right")
 
     def insert_to_box(self, index, text):
         self.response_box_text.configure(state="normal")
