@@ -26,9 +26,10 @@ class ResponseBox:
         self.bg = bg
         self.fg = fg
 
+        '''
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
         outer_frame.pack(
-            padx=self.width, pady=self.height, fill="both", expand=True, side="right"
+            padx=self.width, pady=self.height, fill="both",  side="right"
         )
         outer_frame.place(x=self.x, y=140)
 
@@ -42,10 +43,10 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
-
-        spacer_frame.pack(fill="both", expand=True, side="right")
-        self.response_box_text = tk.Text(
-            spacer_frame,
+        spacer_frame.pack(fill="both", side="right")
+        '''
+        self.response_box = tk.Text(
+            self.root,
             width=self.width,
             height=self.height,
             bg=self.bg,
@@ -55,17 +56,16 @@ class ResponseBox:
             wrap="word",
         )
 
-        self.response_box_text.configure(state="disabled")
-        self.response_box_text.place(x=self.x, y=self.y)
+        self.response_box.configure(state="disabled")
+        self.response_box.pack(fill=tk.X, padx=10, pady=10,expand=True)
 
-        self.response_box_text.pack(fill="both", expand=True, side="right")
 
     def insert_to_box(self, index, text):
-        self.response_box_text.configure(state="normal")
-        self.response_box_text.insert(index, text)
-        self.response_box_text.configure(state="disabled")
+        self.response_box.configure(state="normal")
+        self.response_box.insert(index, text)
+        self.response_box.configure(state="disabled")
 
     def delete_to_box(self, index, text):
-        self.response_box_text.configure(state="normal")
-        self.response_box_text.delete(index, text)
-        self.response_box_text.configure(state="disabled")
+        self.response_box.configure(state="normal")
+        self.response_box.delete(index, text)
+        self.response_box.configure(state="disabled")

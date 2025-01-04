@@ -21,18 +21,21 @@ class PyLoader:
         self.tabs.pack()
         self.tabs.grid(row=0, column=0, sticky="nsew")
         self.defaultFont = font.nametofont("TkDefaultFont")
+
         self.defaultFont.configure(family="Arial", size=14)
 
-        repeater = tk.Frame(self.tabs, width=500, height=500)
+        repeater = tk.Frame(self.tabs)
         repeater.columnconfigure(0, weight=1)
         repeater.configure(bg=self.bg)
-        repeater.pack(fill="both", expand=True)
+        repeater.grid(row=0, column=0, sticky="nsew")
+        repeater.rowconfigure(0, weight=1)
+        repeater.columnconfigure(0, weight=1)
         self.tabs.add(repeater, text="Repeater")
 
         intruder = tk.Frame(self.tabs, width=500, height=500)
         intruder.configure(bg=self.bg)
         intruder.columnconfigure(0, weight=1)
-        intruder.pack(fill="both", expand=True)
+        intruder.pack(fill="both")
         self.tabs.add(intruder, text="Intruder")
 
         # the repeater tab
@@ -42,3 +45,4 @@ class PyLoader:
         # IntruderLayout(intruder)
 
         self.root.config(bg=self.bg)
+
