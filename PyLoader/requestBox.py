@@ -20,15 +20,14 @@ class RequestBox:
         self.button_rel = 69
         self.button_bg = "lightgrey"
         self.button_fg = "white"
-        self.response_box = ResponseBox(self.root, bg=bg, fg=fg)
         self.http = HTTPHandler()
 
         # Url box
         self.url_box = tk.Entry(self.root, bg=self.bg, fg=self.fg)
         self.url_box.pack(fill=tk.X, padx=10, pady=10)
         self.url_box.focus_set()
-        self.url_box_tag = tk.Label(self.root, text="URL", bg=self.bg, fg=self.fg)
-        self.url_box_tag.place(x=50, y=0)
+        self.url_box.insert(0, "https://google.com")
+
 
         # URL box button
         self.send_button = tk.Button(
@@ -91,18 +90,21 @@ class RequestBox:
         # Request box 
         self.request_text = tk.Text(
             self.root,
-            width=self.width,
+            width=10,
             bg=self.bg,
-            height=self.height,
+            height=30,
             bd=3,
             relief="flat",
             wrap="word",
             fg=self.fg,
         )
-        self.request_text.pack(fill=tk.BOTH, padx=10, pady=10,expand=True)
-        self.url_box.pack(fill=tk.X, padx=10, pady=10)
-
+        self.request_text.place(x=30, y=340, relwidth=0.4, anchor="w")
         self.request_text.bind("<Return>", self.handle_request_event)
+
+        self.response_box = ResponseBox(self.root, bg=bg, fg=fg, request_text=self.request_text)
+
+    def return_request_box(self):
+        return self.request_text
 
     def clear_command(self):
         self.request_text.delete(1.0, tk.END)

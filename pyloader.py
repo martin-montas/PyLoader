@@ -2,13 +2,17 @@ import tkinter as tk
 from PyLoader.pyLoader import PyLoader
 
 def on_resize(event):
-    # Dynamically adjust or reposition widgets inside the root window
+    # TODO:
+    # try to prevent too much small resizing
     print(f"New size: {event.width}x{event.height}")
 
 def main():
     root = tk.Tk()
     root.title("PyLoader v0.0.1")
-    root.geometry("600x400")
+
+    root.attributes("-zoomed", True)
+
+    root.geometry("1100x700")
     root.rowconfigure(0, weight=1)
     root.columnconfigure(0, weight=1)
 
@@ -17,7 +21,6 @@ def main():
 
     # Bind the resize event
     root.bind("<Configure>", on_resize)
-
     PyLoader(root)
     root.mainloop()
 

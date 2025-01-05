@@ -14,6 +14,7 @@ class ResponseBox:
         width=75,
         height=25,
         fg="black",
+        request_text=None,
     ):
         self.root = root
         self.win_height = self.root.winfo_height()
@@ -45,10 +46,11 @@ class ResponseBox:
         )
         spacer_frame.pack(fill="both", side="right")
         '''
+
         self.response_box = tk.Text(
             self.root,
-            width=self.width,
-            height=self.height,
+            width=10,
+            height=30,
             bg=self.bg,
             fg=self.fg,
             bd=3,
@@ -57,8 +59,9 @@ class ResponseBox:
         )
 
         self.response_box.configure(state="disabled")
-        self.response_box.pack(fill=tk.X, padx=10, pady=10,expand=True)
 
+        if request_text:
+            self.response_box.place(x=300 + request_text.winfo_reqwidth(), y=340, relwidth=0.4, anchor="w")
 
     def insert_to_box(self, index, text):
         self.response_box.configure(state="normal")

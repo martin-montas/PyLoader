@@ -6,20 +6,17 @@ class HTTPHandler:
         pass
 
     def handle_request(self, url, headers=None, body=None):
-        """
+        '''
         Send the modified request to the actual server.
-        """
+        '''
         try:
-            if not url.startswith("http://") or not url.startswith("https://"):
-                if body:
-                    return requests.post("https://" + url, headers=headers, data=body)
-                else:
-                    return requests.get("https://" + url, headers=headers)
+            if not (url.startswith("http://") or url.startswith("https://")):
+                url = "https://" + str(url)
+
+            if body:
+                return requests.post(url, headers=headers, data=body)
             else:
-                if body:
-                    return requests.post("https://" + url, headers=headers, data=body)
-                else:
-                    return requests.get("https://" + url, headers=headers)
+                return requests.get(url, headers=headers)
 
         except requests.exceptions.RequestException as e:
             print(f"Error: {e}")
