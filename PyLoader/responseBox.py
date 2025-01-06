@@ -57,9 +57,7 @@ class ResponseBox:
             relief="flat",
             wrap="word",
         )
-
         self.response_box.configure(state="disabled")
-
         if request_text:
             self.response_box.place(x=300 + request_text.winfo_reqwidth(), y=340, relwidth=0.4, anchor="w")
 
