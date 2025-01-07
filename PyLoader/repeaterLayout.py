@@ -19,13 +19,11 @@ class RepeaterLayout:
         self.button_fg = "black"
         self.win_width = self.root.winfo_width()
         self.win_height = self.root.winfo_height()
-        self.button_rel = 69
 
-        root.grid_rowconfigure(0, weight=1)  # Allow the row to expand
+        root.grid_rowconfigure(0, weight=1)     # Allow the row to expand
         root.grid_columnconfigure(0, weight=1)  # Allow the column to expand
 
         RequestBox(self.root, bg=bg, fg=fg)
-
 
     def option_selected(self, value):
         messagebox.showinfo("Selected Option", value)
