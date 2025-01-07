@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import messagebox
 from PyLoader.requestBox import RequestBox
 
@@ -25,9 +24,8 @@ class RepeaterLayout:
         root.grid_rowconfigure(0, weight=1)  # Allow the row to expand
         root.grid_columnconfigure(0, weight=1)  # Allow the column to expand
 
-        # Place the button in the grid
         RequestBox(self.root, bg=bg, fg=fg)
 
 
-def option_selected(self, value):
-    messagebox.showinfo("Selected Option", value)
+    def option_selected(self, value):
+        messagebox.showinfo("Selected Option", value)

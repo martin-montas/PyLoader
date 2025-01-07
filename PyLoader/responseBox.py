@@ -14,7 +14,6 @@ class ResponseBox:
         width=75,
         height=25,
         fg="black",
-        request_text=None,
         text_color_bg="#E8DCB8",
     ):
         self.root = root
@@ -22,14 +21,13 @@ class ResponseBox:
         self.win_width = self.root.winfo_width()
         self.width = width
         self.height = height
-        self.x =x  
+        self.x = x
         self.button_bg = "lightgrey"
         self.y = y
         self.bg = bg
         self.fg = fg
         self.text_color_bg = text_color_bg
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
-
 
         spacer_frame = tk.Frame(
             outer_frame,
@@ -38,7 +36,6 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
-
 
         # Response box
         self.response_box = tk.Text(

@@ -28,11 +28,13 @@ class RequestBoxParser:
         self._response = response
 
     def parse_request_box(self):
-        """
+        '''
+        FIXME: MAKE IT THIS WAY
+
         Host: example.com
         User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
         Accept: text/html,application/xhtml+xml
         Content-Type: application/json
-        """
+        '''
 
         return self._response.headers

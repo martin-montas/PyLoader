@@ -2,6 +2,7 @@ import tkinter as tk
 from PyLoader.httpHandler import HTTPHandler, RequestBoxParser
 from PyLoader.responseBox import ResponseBox
 
+
 class RequestBox:
     '''
     Class to initialize the request box
@@ -32,12 +33,12 @@ class RequestBox:
         self.url_box.focus_set()
         self.url_box.insert(0, "https://google.com")
 
-
         # URL box button
         self.send_button = tk.Button(
             self.root,
             text="Send",
-            bg=self.bg, fg=self.fg,
+            bg=self.bg,
+            fg=self.fg,
             bd=3,
             width=10,
             height=0,
@@ -84,8 +85,7 @@ class RequestBox:
             bg=self.bg,
         )
 
-
-        # Request box 
+        # Request box
         self.request_text = tk.Text(
             spacer_frame,
             width=70,
@@ -104,8 +104,11 @@ class RequestBox:
         outer_frame.grid(row=1, column=0, sticky="w", padx=10, pady=10)
 
         self.request_text.bind("<Return>", self.handle_request_event)
-        self.response_box = ResponseBox(self.root, bg=bg, fg=fg,
-        request_text=self.request_text, text_color_bg=self.text_color_bg
+        self.response_box = ResponseBox(
+            self.root,
+            bg=bg,
+            fg=fg,
+            text_color_bg=self.text_color_bg,
         )
 
     def return_request_box(self):
@@ -125,9 +128,7 @@ class RequestBox:
         headers = parser.parse_request_box()
         self.request_text.insert(tk.END, f"Host: {self.url_box.get()}\n")
         if request:
-            self.request_text.insert(
-                tk.END, f"Status Code: {request.status_code}\n"
-            )
+            self.request_text.insert(tk.END, f"Status Code: {request.status_code}\n")
         for key, value in headers.items():
             self.request_text.insert(tk.END, f"{key}: {value}\n")
 
@@ -141,9 +142,7 @@ class RequestBox:
         headers = parser.parse_request_box()
         self.request_text.insert(tk.END, f"Host: {self.url_box.get()}\n")
         if request:
-            self.request_text.insert(
-                tk.END, f"Status Code: {request.status_code}\n"
-            )
+            self.request_text.insert(tk.END, f"Status Code: {request.status_code}\n")
         for key, value in headers.items():
             self.request_text.insert(tk.END, f"{key}: {value}\n")
 

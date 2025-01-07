@@ -1,10 +1,12 @@
 import tkinter as tk
 from PyLoader.pyLoader import PyLoader
 
+
 def on_resize(event):
     # TODO:
     # try to prevent too much small resizing
     print(f"New size: {event.width}x{event.height}")
+
 
 def main():
     root = tk.Tk()

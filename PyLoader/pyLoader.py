@@ -44,4 +44,3 @@ class PyLoader:
         # IntruderLayout(intruder)
 
         self.root.config(bg=self.bg)
-
