@@ -15,6 +15,7 @@ class ResponseBox:
         height=25,
         fg="black",
         request_text=None,
+        text_color_bg="#E8DCB8",
     ):
         self.root = root
         self.win_height = self.root.winfo_height()
@@ -26,16 +27,9 @@ class ResponseBox:
         self.y = y
         self.bg = bg
         self.fg = fg
-
-        '''
+        self.text_color_bg = text_color_bg
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
-        outer_frame.pack(
-            padx=self.width, pady=self.height, fill="both",  side="right"
-        )
-        outer_frame.place(x=self.x, y=140)
 
-        label = tk.Label(self.root, text="Response", bg=self.bg, fg=self.fg)
-        label.place(x=self.x + 15, y=135)
 
         spacer_frame = tk.Frame(
             outer_frame,
@@ -44,24 +38,24 @@ class ResponseBox:
             pady=30,
             relief="flat",
         )
-        spacer_frame.pack(fill="both", side="right")
-        '''
 
+
+        # Response box
         self.response_box = tk.Text(
-            self.root,
-            width=75,
+            spacer_frame,
+            width=70,
             height=30,
-            bg=self.bg,
+            bg=text_color_bg,
             fg=self.fg,
             bd=3,
             relief="flat",
             wrap="word",
         )
-        self.response_box.configure(state="disabled")
-        if request_text:
-            # request_width = request_text.winfo_width()
-            self.width = self.root.winfo_width()
-            self.response_box.grid(row=0, column=1, sticky="e", padx=10, pady=10)
+
+        # layout
+        self.response_box.grid(row=0, column=1, sticky="e", padx=10, pady=10)
+        spacer_frame.grid(row=1, column=0, sticky="e", padx=10, pady=10)
+        outer_frame.grid(row=1, column=0, sticky="e", padx=10, pady=10)
 
     def insert_to_box(self, index, text):
         self.response_box.configure(state="normal")

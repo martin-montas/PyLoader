@@ -16,17 +16,18 @@ class RepeaterLayout:
         self.x = 140
         self.y = 100
         self.left_pad = 20
-        self.footer_version = "version: v0.0.1"
         self.button_bg = "lightgrey"
         self.button_fg = "black"
         self.win_width = self.root.winfo_width()
         self.win_height = self.root.winfo_height()
         self.button_rel = 69
 
+        root.grid_rowconfigure(0, weight=1)  # Allow the row to expand
+        root.grid_columnconfigure(0, weight=1)  # Allow the column to expand
+
+        # Place the button in the grid
         RequestBox(self.root, bg=bg, fg=fg)
 
-        footer = tk.Label(self.root, text=self.footer_version, bg=bg, fg=fg)
-        footer.grid(row=1, column=0, sticky="ew", padx=10, pady=10)
 
-    def option_selected(self, value):
-        messagebox.showinfo("Selected Option", value)
+def option_selected(self, value):
+    messagebox.showinfo("Selected Option", value)

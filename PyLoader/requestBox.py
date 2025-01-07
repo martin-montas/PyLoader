@@ -1,5 +1,4 @@
 import tkinter as tk
-
 from PyLoader.httpHandler import HTTPHandler, RequestBoxParser
 from PyLoader.responseBox import ResponseBox
 
@@ -20,11 +19,13 @@ class RequestBox:
         self.button_rel = 69
         self.button_bg = "lightgrey"
         self.button_fg = "white"
+        self.text_color_bg = "#ffedc7"
+
         self.http = HTTPHandler()
 
         # Url box
         self.url_box = tk.Entry(self.root, bg=self.bg, fg=self.fg)
-        self.url_box.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+        self.url_box.grid(row=0, column=0, sticky="n", padx=10, pady=10)
 
         # Configure column weight to allow resizing
         self.root.columnconfigure(0, weight=1)
@@ -74,12 +75,7 @@ class RequestBox:
         self.request_button.place(relx=0.5, rely=0.4, anchor="w")
 
         # Request box label
-        '''
         outer_frame = tk.Frame(self.root, relief="groove", bd=4, bg=self.bg)
-        outer_frame.pack(padx=self.width, pady=self.height, fill="both")
-        outer_frame.place(x=20, y=140)
-        label = tk.Label(self.root, text="Requests", fg=self.fg, bg=self.bg)
-        label.place(x=self.x, y=135, anchor="nw")
         spacer_frame = tk.Frame(
             outer_frame,
             padx=30,
@@ -87,25 +83,30 @@ class RequestBox:
             relief="flat",
             bg=self.bg,
         )
-        spacer_frame.pack(fill="both")
-        '''
+
 
         # Request box 
         self.request_text = tk.Text(
-            self.root,
-            width=75,
-            bg=self.bg,
+            spacer_frame,
+            width=70,
+            bg=self.text_color_bg,
             height=30,
             bd=3,
             relief="flat",
             wrap="word",
             fg=self.fg,
         )
-        # self.request_text.place(x=10, y=340,  anchor="w")
-        self.request_text.grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.request_text.bind("<Return>", self.handle_request_event)
 
-        self.response_box = ResponseBox(self.root, bg=bg, fg=fg, request_text=self.request_text)
+        # Layout
+        self.request_text.grid(row=0, column=0, sticky="w", padx=10, pady=10)
+
+        spacer_frame.grid(row=1, column=0, sticky="w", padx=10, pady=10)
+        outer_frame.grid(row=1, column=0, sticky="w", padx=10, pady=10)
+
+        self.request_text.bind("<Return>", self.handle_request_event)
+        self.response_box = ResponseBox(self.root, bg=bg, fg=fg,
+        request_text=self.request_text, text_color_bg=self.text_color_bg
+        )
 
     def return_request_box(self):
         return self.request_text
@@ -148,7 +149,6 @@ class RequestBox:
 
     def handle_request_middle_button(self):
         if self.request_text.get("1.0", tk.END):
-
             new_headers = {}
             if self.headers:
                 for line in self.request_text.get("1.0", tk.END).split("\n"):
