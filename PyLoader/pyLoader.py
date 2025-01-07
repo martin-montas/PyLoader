@@ -7,7 +7,7 @@ from PyLoader.repeaterLayout import RepeaterLayout
 
 
 class PyLoader:
-    """ """
+    ''' '''
 
     def __init__(self, root):
         self.root = root
@@ -18,7 +18,6 @@ class PyLoader:
         style.configure("TNotebook.Tab", background=self.bg, foreground=self.fg)
         style.configure("TNotebook", background=self.bg, foreground=self.fg)
         style.map("TNotebook.Tab", background=[("selected", self.bg)])
-        self.tabs.pack()
         self.tabs.grid(row=0, column=0, sticky="nsew")
         self.defaultFont = font.nametofont("TkDefaultFont")
 
@@ -35,7 +34,7 @@ class PyLoader:
         intruder = tk.Frame(self.tabs, width=500, height=500)
         intruder.configure(bg=self.bg)
         intruder.columnconfigure(0, weight=1)
-        intruder.pack(fill="both")
+        intruder.grid()
         self.tabs.add(intruder, text="Intruder")
 
         # the repeater tab

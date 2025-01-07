@@ -24,7 +24,10 @@ class RequestBox:
 
         # Url box
         self.url_box = tk.Entry(self.root, bg=self.bg, fg=self.fg)
-        self.url_box.pack(fill=tk.X, padx=10, pady=10)
+        self.url_box.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+
+        # Configure column weight to allow resizing
+        self.root.columnconfigure(0, weight=1)
         self.url_box.focus_set()
         self.url_box.insert(0, "https://google.com")
 
@@ -40,7 +43,7 @@ class RequestBox:
             relief="raised",
             command=self.handle_request_button,
         )
-        self.send_button.place(x=50, y=90)
+        # self.send_button.place(x=50, y=90)
         self.url_box.bind("<Return>", self.handle_request_event)
 
         # Request button
@@ -98,8 +101,8 @@ class RequestBox:
             wrap="word",
             fg=self.fg,
         )
-        self.request_text.place(x=10, y=340,  anchor="w")
-        self.request_text.update_idletasks()
+        # self.request_text.place(x=10, y=340,  anchor="w")
+        self.request_text.grid(row=0, column=0, sticky="w", padx=5, pady=5)
         self.request_text.bind("<Return>", self.handle_request_event)
 
         self.response_box = ResponseBox(self.root, bg=bg, fg=fg, request_text=self.request_text)

@@ -61,7 +61,7 @@ class ResponseBox:
         if request_text:
             # request_width = request_text.winfo_width()
             self.width = self.root.winfo_width()
-            self.response_box.place(x=self.width -10, y=340, anchor="e")
+            self.response_box.grid(row=0, column=1, sticky="e", padx=10, pady=10)
 
     def insert_to_box(self, index, text):
         self.response_box.configure(state="normal")
