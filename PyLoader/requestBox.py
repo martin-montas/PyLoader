@@ -90,7 +90,7 @@ class RequestBox:
         # Request box 
         self.request_text = tk.Text(
             self.root,
-            width=30,
+            width=75,
             bg=self.bg,
             height=30,
             bd=3,
@@ -98,7 +98,8 @@ class RequestBox:
             wrap="word",
             fg=self.fg,
         )
-        self.request_text.place(x=30, y=340, relwidth=0.5, anchor="w")
+        self.request_text.place(x=10, y=340,  anchor="w")
+        self.request_text.update_idletasks()
         self.request_text.bind("<Return>", self.handle_request_event)
 
         self.response_box = ResponseBox(self.root, bg=bg, fg=fg, request_text=self.request_text)

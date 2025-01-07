@@ -12,7 +12,7 @@ def main():
 
     root.attributes("-zoomed", True)
 
-    root.geometry("1100x700")
+    root.geometry("500x500")
     root.rowconfigure(0, weight=1)
     root.columnconfigure(0, weight=1)
 

@@ -49,7 +49,7 @@ class ResponseBox:
 
         self.response_box = tk.Text(
             self.root,
-            width=10,
+            width=75,
             height=30,
             bg=self.bg,
             fg=self.fg,
@@ -59,7 +59,9 @@ class ResponseBox:
         )
         self.response_box.configure(state="disabled")
         if request_text:
-            self.response_box.place(x=300 + request_text.winfo_reqwidth(), y=340, relwidth=0.4, anchor="w")
+            # request_width = request_text.winfo_width()
+            self.width = self.root.winfo_width()
+            self.response_box.place(x=self.width -10, y=340, anchor="e")
 
     def insert_to_box(self, index, text):
         self.response_box.configure(state="normal")
